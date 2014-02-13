@@ -1,5 +1,6 @@
 #coding=utf-8
 import sys
+import math
 
 
 class ProgressBar(object):
@@ -9,9 +10,29 @@ class ProgressBar(object):
 
         reset = '\033[39m'
         color = '\033[38;5;{}m'
-        self.fill = color.format(fillcolor) if fillcolor else reset
-        self.border = color.format(bordercolor) if bordercolor else reset
 
+        self.colors = []
+
+        def clr(c):
+            return color.format(c) if c is not None else reset
+
+        for colorset in fillcolor, bordercolor:
+            if type(colorset) in (int, str, type(None)):
+                colorset = [colorset]
+            self.colors.append(map(clr, colorset))
+
+    def _progressive_color(self, n):
+        colorset = self.colors[n]
+        n = len(colorset)
+        return colorset[int(math.ceil(self.progress * n) -1)]
+
+    @property
+    def fill(self):
+        return self._progressive_color(0)
+
+    @property
+    def border(self):
+        return self._progressive_color(1)
 
     def __enter__(self):
         self.start()
