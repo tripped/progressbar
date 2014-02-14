@@ -89,6 +89,16 @@ class ProgressBar(object):
         # Bottom bar
         sys.stdout.write(u'▔' * self.width)
         sys.stdout.write('\n')
+
+        # Interior text indicator
+        percent = ' ' + str(int(self.progress * 100)) + '%'
+        if blocks >= len(percent):
+            sys.stdout.write('\x1b7\x1b[2G\x1b[2A')
+            self.setbg('fill')
+            self.setfg('text')
+            sys.stdout.write(percent)
+            sys.stdout.write('\x1b8')
+
         self.resetfg()
         self.resetbg()
         sys.stdout.flush()
