@@ -31,7 +31,7 @@ block:
 
 You can specify both a border color and a fill color for the bar:
 
-    p = ProgressBar(fillcolor=24, bordercolor=1)
+    p = ProgressBar(fill=24, border=1)
 
 Valid color values are `0` through `255`, as long as your terminal has
 256-color support. If your terminal doesn't support 256 colors please send
@@ -42,7 +42,7 @@ color in your terminal.
 Ranges of color values can also be supplied, in which case they will be
 interpolated with the bar's current progress, producing neat color changes:
 
-    p = ProgressBar(fillcolor=[9, 11, 10, 12])
+    p = ProgressBar(fill=[9, 11, 10, 12])
 
 The above will produce a progress bar that transitions from red, to yellow,
 to green, to blue in each respective quarter of its progress (for typical

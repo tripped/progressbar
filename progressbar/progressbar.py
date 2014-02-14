@@ -4,35 +4,53 @@ import math
 
 
 class ProgressBar(object):
-    def __init__(self, width=80, fillcolor=33, bordercolor=None):
+
+    FG = '\033[38;5;{}m'
+    BG = '\033[48;5;{}m'
+    RESETFG = '\033[39m'
+    RESETBG = '\033[49m'
+
+    COLORS = {
+        'fill': [33],
+        'border': [None],
+        'text': [235]
+    }
+
+    def __init__(self, width=80, **kwargs):
         self.width = width
         self.progress = 0.0
 
-        reset = '\033[39m'
-        color = '\033[38;5;{}m'
-
-        self.colors = []
-
-        def clr(c):
-            return color.format(c) if c is not None else reset
-
-        for colorset in fillcolor, bordercolor:
-            if type(colorset) in (int, str, type(None)):
-                colorset = [colorset]
-            self.colors.append(map(clr, colorset))
+        self.colors = dict(self.COLORS)
+        for k, v in kwargs.items():
+            if k in self.COLORS:
+                if type(v) in (int, str, type(None)):
+                    v = [v]
+                self.colors[k] = v
 
     def _progressive_color(self, n):
         colorset = self.colors[n]
         n = len(colorset)
-        return colorset[int(math.ceil(self.progress * n) -1)]
+        return colorset[int(math.ceil(self.progress * n) - 1)]
 
-    @property
-    def fill(self):
-        return self._progressive_color(0)
+    def setfg(self, colortype):
+        c = self._progressive_color(colortype)
+        if c is not None:
+            sys.stdout.write(self.FG.format(c))
+        else:
+            self.resetfg()
 
-    @property
-    def border(self):
-        return self._progressive_color(1)
+    def resetfg(self):
+        sys.stdout.write(self.RESETFG)
+
+    def setbg(self, colortype):
+        c = self._progressive_color(colortype)
+        if c is not None:
+            sys.stdout.write(self.BG.format(c))
+        else:
+            self.resetbg()
+
+    def resetbg(self):
+        sys.stdout.write(self.RESETBG)
 
     def __enter__(self):
         self.start()
@@ -43,7 +61,7 @@ class ProgressBar(object):
 
     def render(self):
         # Topbar
-        sys.stdout.write(self.border)
+        self.setfg('border')
         sys.stdout.write(u'▁' * self.width)
         sys.stdout.write('\n')
 
@@ -51,7 +69,7 @@ class ProgressBar(object):
         sys.stdout.write(u'█')
 
         # Contents
-        sys.stdout.write(self.fill)
+        self.setfg('fill')
         full_width = (self.width - 2) * self.progress
         blocks = int(full_width)
         remainder = full_width - blocks
@@ -64,14 +82,16 @@ class ProgressBar(object):
         sys.stdout.write(u' ' * (self.width - 3 - blocks))
 
         # Right edge
-        sys.stdout.write(self.border)
+        self.setfg('border')
         sys.stdout.write(u'█')
         sys.stdout.write('\n')
 
         # Bottom bar
         sys.stdout.write(u'▔' * self.width)
         sys.stdout.write('\n')
-        sys.stdout.write('\033[39m')
+        self.resetfg()
+        self.resetbg()
+        sys.stdout.flush()
 
     def start(self):
         self.render()
