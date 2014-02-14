@@ -85,8 +85,10 @@ class ProgressBar(object):
         self.progress = min(max(progress, 0.0), 1.0)
 
         # Restore cursor position and redraw
+        sys.stdout.write('\x1b[?25l')
         sys.stdout.write('\x1b[3F')
         self.render()
+        sys.stdout.write('\x1b[?25h')
 
     def tick(self, amount):
         """
