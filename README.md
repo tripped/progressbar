@@ -2,8 +2,9 @@ Progress Bar
 ============
 
 A fairly pointless bit of terminal porn that allows you to plop a colorful,
-smoothly animated progress bar into your CLI app. Useful? Maybe a little.
-Pretty? Heck yes! Should work on any ANSI-compliant terminal emulator.
+smoothly animated progress bar into your CLI app. Useful? Maybe ~~a little~~
+no.  Pretty? Heck yes! Should work on ~~all~~ ~~many~~ some ANSI-compliant
+terminal emulator(s).
 
 Usage
 -----
