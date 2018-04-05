@@ -6,6 +6,12 @@ smoothly animated progress bar into your CLI app. Useful? Maybe ~~a little~~
 no.  Pretty? Heck yes! Should work on ~~all~~ ~~many~~ some ANSI-compliant
 terminal emulator(s).
 
+If the gods are good, it can look something like this:
+
+![Bet you wish your shell could do this](https://raw.githubusercontent.com/tripped/progressbar/master/example.gif)
+
+(GNOME Terminal 3.18.3; shell: fish 2.7.1; font: FiraCode Regular)
+
 Usage
 -----
 
